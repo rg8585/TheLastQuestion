@@ -118,7 +118,7 @@ document.addEventListener("wheel", function(event) {
   console.log("right side: need smaller" + (contentHeight - viewportHeight-600))
 
   // Check if reached the bottom of the div
-  if (scrollPosition+1700 >= (contentHeight - viewportHeight-600) && deltaY>0) {
+  if (scrollPosition+1400 >= (contentHeight - viewportHeight-600) && deltaY>0) {
 
     //translating scroll
     cycleAnimation -= deltaY
