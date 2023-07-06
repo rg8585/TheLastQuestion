@@ -1,7 +1,4 @@
 
-
-
-
 let checker = 0
 let paragraphs = [];
 let paragraphsHT = [];
