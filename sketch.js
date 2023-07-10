@@ -123,6 +123,7 @@ document.addEventListener("wheel", function(event) {
     cycleAnimation -= deltaY
     quickswitch = false
     mainContainer.style('transform',`translateY(${cycleAnimation}px`)
+    console.log("im transforming")
 
 
     //cycle
@@ -589,5 +590,5 @@ document.addEventListener('touchmove', resetTimer);
 
 // add timer
 // fix spaces
-
+// fix the fact that restarting wil restart only when inside the transform
 //add avater icon
