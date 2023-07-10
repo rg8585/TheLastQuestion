@@ -12,7 +12,6 @@ body{
 
 h1{
   text-align: left;
-  margin-bottom: 500px;
   margin-top: 300px;
   font-size: 50px;
   letter-spacing: 0.01rem;
@@ -23,13 +22,21 @@ h1{
 
 .h2{
   text-align: left;
-  margin-bottom: 400px;
-  margin-top: 300px;
-  font-size: 40px;
+  font-size: 30px;
   letter-spacing: 0.01rem;
-  line-height: 50px;
   font-family: 'Roboto Condensed', sans-serif;
   font-weight: 200;
+}
+
+h3{
+  text-align: left;
+  font-size: 20px;
+  letter-spacing: 0.01rem;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 200;
+  margin-bottom: 500px;
+  margin-top: -30px;
+
 }
 
 .mainContainer {
@@ -69,6 +76,17 @@ p {
   font-size: 20px;
 }
 
+p {
+  text-indent: 50px;
+  letter-spacing: 0.03em;
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  margin: 0;
+  font-size: 20px;
+}
+
+
 .in {
   display: inline-block;
   text-indent: 50px;
@@ -102,8 +120,6 @@ lo safkan character2 =   Bert Lupov |     */
   font-style: normal;
   margin: 0;
   font-size: 20px;
-  /* color: blueviolet; */
-  /* display: inline-block; */
 }
 
 

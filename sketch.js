@@ -1,9 +1,13 @@
 
+
+
+
 let checker = 0
 let paragraphs = [];
 let paragraphsHT = [];
 let chapterIndex = 0;
-let cycles = 0.0003
+let cycles = 0.1
+let cyclestr = 1
 let cycleAnimation = 0
 let direction = 0
 let contentHeight = 0
@@ -87,11 +91,9 @@ document.addEventListener("wheel", function(event) {
   changeChapterText();
 
   // Calculate the height of the content
+
   if(cycleAnimation==0){
     contentHeight =  document.body.scrollHeight
-    // if(scrollPosition > 300 && scrollPosition<400){
-    //   mainContainer.style('transform','translateY(0px')
-    // }
   }
 
   // Calculate the height of the viewport
@@ -110,35 +112,34 @@ document.addEventListener("wheel", function(event) {
 
   }
 
-  console.log("cycle anim: " + cycleAnimation)
-  console.log("scroll pos + 500 need bigger : " + scrollPosition+700)
-  console.log("right side: need smaller" + (contentHeight - viewportHeight-600))
+  // console.log("cycle anim: " + cycleAnimation)
+  // console.log("scroll pos + 500 need bigger : " + scrollPosition+700)
+  // console.log("right side: need smaller" + (contentHeight - viewportHeight-600))
 
   // Check if reached the bottom of the div
-  if (scrollPosition+1400 >= (contentHeight - viewportHeight-600) && deltaY>0) {
+  if ( getLastVisibleElement() > paragraphs.length-2) {
 
     //translating scroll
     cycleAnimation -= deltaY
     quickswitch = false
     mainContainer.style('transform',`translateY(${cycleAnimation}px`)
-    console.log("hello")
-    console.log(cycleAnimation)
-    console.log(-windowHeight*2-100)
 
 
     //cycle
-    if(cycleAnimation < -windowHeight*2-100){
+    if(paragraphs[167].elt.getBoundingClientRect().y<0){
       mainContainer.style('transform',`translateY(${windowHeight*2}px`)
       cycleAnimation = 0
       window.scrollTo(0, 0);
       quickswitch = true
       cycles += 0.5
+      cyclestr += 1
+      changeCycle()
     }
   }
 
 
   if(scrollDifference>0){
-    if(bank%2>1){
+    if(bank%2>=1){
       chaos();
     }
   }
@@ -150,6 +151,7 @@ document.addEventListener("wheel", function(event) {
 
 
 function changeChapterText() {
+
   var targetElements = document.querySelectorAll('.chaptertext');
   var currentPosition = window.pageYOffset || document.documentElement.scrollTop;
   
@@ -191,25 +193,28 @@ let selectedParagraphIndex;
 function chaos() {
 
   if (quickswitch){
-
     let currentHeight = getValue(divA, 'rectHeight');
-    multiplier = floor((currentHeight / 3) * cycles);
-  
+    multiplier = floor(( bank / 1000) * cycles);
     for (let c = 0; c < multiplier; c++) {
       let indexClassyParagraph = chooseRandomParagraph();
-      let classy = findClass(paragraphs[indexClassyParagraph]);
+      let classy = findClass(paragraphs[indexClassyParagraph])
       chooseRandomFunction(functions,indexClassyParagraph)
     }
   }
 
 }
-function chooseRandomElement(array) {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-}
+
+
 
 function chooseRandomParagraph() {
-  const index = Math.floor(Math.random() * paragraphs.length);
+
+  let index = 0
+  
+  if(cyclestr>2){
+    index = Math.floor( random(getLastVisibleElement(),paragraphs.length));
+  }else{
+    index = Math.floor( Math.random() * paragraphs.length);
+  }
   return index;
 }
 
@@ -269,7 +274,6 @@ function chooseRandomFunction(functions,n) {
 
 
 function mouseClicked() {
-  increaseParagraphSize(8)
 }
 
 
@@ -327,7 +331,6 @@ function changeTracking(n){
     let child = children[i]
     let styleChild = children[i].classList[0]
     let spacing = (parseInt(window.getComputedStyle(child).letterSpacing))
-    print("glofdslgdlosgsd" + spacing)
     let inc = random(-0.01,0.01)
     spacing += inc
 
@@ -363,7 +366,6 @@ function underlinging(n){
 
 
 function takeSide(n){
-  print("take side")
   let paragraph = paragraphs[n];
   let children = paragraph.child();
   for(let i=0; i<children.length ; i++ ){
@@ -412,9 +414,11 @@ function takeSide(n){
 
 function increaseParagraphSize(n) {
 
-  
   let paragraph = paragraphs[n];
   let children = paragraph.child();
+  console.log(paragraph.elt)
+  console.log(children[0].attributes[1])
+
   
   for(let i=0; i<children.length ; i++ ){
     let diceRoll = random(100)
@@ -423,7 +427,6 @@ function increaseParagraphSize(n) {
     textSize += 1
     if (textSize<50){
       child.style.fontSize = `${textSize}px`
-      print("blublu")
     }
 
     if(diceRoll>98){
@@ -441,7 +444,6 @@ function decreaseParagraphSize(n) {
   
   for(let i=0; i<children.length ; i++ ){
     let child = children[i]
-    print(child)
     let textSize = (parseInt(window.getComputedStyle(child).fontSize))
     textSize -= 1
     if (textSize>11){
@@ -450,7 +452,6 @@ function decreaseParagraphSize(n) {
   }
 
 }
-
 
 
 function nudgeParagraph(n) {
@@ -462,65 +463,19 @@ function nudgeParagraph(n) {
   
   paragraph.style('margin-left', newMarginLeft + 'px');
   paragraph.style('margin-right', newMarginRight + 'px');
+  let paraX = paragraph.elt.getBoundingClientRect().x
+  let paraY = paragraph.elt.getBoundingClientRect().y
+  let paraR = paragraph.elt.getBoundingClientRect().right
+
+
+  if (paraX < 0 || paraR > windowWidth){
+    paragraph.style('margin-left', '0px')
+    paragraph.style('margin-right', '0px')
+  }
+
   
 }
 
-
-
-function createColumn(n) {
-  // Check if the index is within the bounds of the array
-  if (n >= 0 && n < paragraphs.length - 1) {
-    // Create a new div element to hold the columns
-    let columnContainer = createDiv('');
-    columnContainer.style('display', 'flex');
-
-    // Create the first column and set its content
-    let column1 = createP(paragraphs[n].elt.textContent);
-    column1.class('column');
-
-    // Create the second column and set its content from the next paragraph
-    let nextParagraph = paragraphs[n + 1].elt;
-    let column2 = createP(nextParagraph.textContent); // Copy the text content
-    column2.class('column');
-
-    // Insert the columns into the column container
-    columnContainer.child(column1);
-    columnContainer.child(column2);
-
-    // Get the reference to the current paragraph's DOM element
-    let currentParagraphDOM = paragraphs[n].elt;
-
-    // Insert the column container after the current paragraph
-    divA.elt.insertBefore(columnContainer.elt, currentParagraphDOM.nextSibling);
-
-    // Remove the original paragraph and the next paragraph
-    paragraphs[n].remove();
-    paragraphs[n + 1].remove();
-
-    // Update the paragraphs array with the new column container
-    paragraphs[n] = column1;
-    paragraphs[n + 1] = column2; // Assign the updated column container to paragraphs[n+1]
-  }
-}
-
-
-function splitParagraph(n) { //split one paragraph
-  let paragraphA = paragraphs[n];
-  let textContent = paragraphA.html();
-  let words = textContent.split(' ');
-  let wordsA = words.slice(0, 2);
-  let wordsB = words.slice(2);
-
-  // Update the content of paragraphA
-  paragraphA.html(wordsA.join(' '));
-
-  // Create a new paragraph element for wordsB
-  let paragraphB = createElement('p');
-  paragraphB.html(wordsB.join(' '));
-
-  // Insert paragraphB after paragraphA
-  paragraphA.elt.insertAdjacentElement('afterend', paragraphB.elt);
-}
 
 
 //////////// usability and engine
@@ -573,17 +528,66 @@ function keyTyped() {
 }
 
 
+function changeCycle() {
+  document.querySelector('h3').textContent = "cycle: [ "+cyclestr+" ]";
+}
+
+function getLastVisibleElement() {
+  var elements = paragraphs
+  var visibleElements = [];
+
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[i];
+    var rect = element.elt.getBoundingClientRect();
+
+    if (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    ) {
+      visibleElements.push(element);
+    }
+  }
+
+  let lastElement = visibleElements[visibleElements.length-1]
+  let lastElementIndex = paragraphs.indexOf(lastElement)
+
+  return lastElementIndex;
+}
+
+
+
+//////------------------- timer
+
+var idleTime = 0;
+var idleInterval = setInterval(timerIncrement, 60000); // Check every minute
+
+// Reset the timer and restart the page if no scrolling occurs for 15 minutes
+function timerIncrement() {
+  idleTime++;
+  if (idleTime >= 15) { // 15 minutes (15 * 60 seconds)
+    window.location.reload(); // Restart the page
+  }
+}
+
+// Reset the timer on any user activity (e.g., scroll, mouse movement, keypress)
+function resetTimer() {
+  idleTime = 0;
+}
+
+// Attach the event listeners to detect user activity
+document.addEventListener('scroll', resetTimer);
+document.addEventListener('mousemove', resetTimer);
+document.addEventListener('keypress', resetTimer);
+document.addEventListener('touchstart', resetTimer);
+document.addEventListener('touchmove', resetTimer);
+
+
 //////NOTES TO KEEP:---------------------------------------------------
 
 
-//Get the current font size of the first paragraph 
-//let currentSize = parseFloat(paragraphs[0].style('font-size'));
+// add timer
+// fix spaces
 
-//check paragraph height
-// let scaledHeight = paragraph.elt.getBoundingClientRect().height;
-
-
-//design h1 the last question
-//roboto condesned
-//change scrollbar in firefox
 //add avater icon
