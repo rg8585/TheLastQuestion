@@ -6,7 +6,7 @@ let checker = 0
 let paragraphs = [];
 let paragraphsHT = [];
 let chapterIndex = 0;
-let cycles = 0.1
+let cycles = 1
 let cyclestr = 1
 let cycleAnimation = 0
 let direction = 0
@@ -120,14 +120,14 @@ document.addEventListener("wheel", function(event) {
   if ( getLastVisibleElement() >= paragraphs.length-2) {
 
     //translating scroll
-    cycleAnimation -= deltaY
+    cycleAnimation -= deltaY*2
     quickswitch = false
     mainContainer.style('transform',`translateY(${cycleAnimation}px`)
     console.log("im transforming")
 
 
     //cycle
-    if(paragraphs[167].elt.getBoundingClientRect().y<-10){
+    if(( (paragraphs.length) -2 ).elt.getBoundingClientRect().y<-10){
       mainContainer.style('transform',`translateY(${windowHeight*2}px`)
       cycleAnimation = 0
       window.scrollTo(0, 0);
@@ -195,7 +195,7 @@ function chaos() {
 
   if (quickswitch){
     let currentHeight = getValue(divA, 'rectHeight');
-    multiplier = floor(( bank / 1000) * cycles);
+    multiplier = floor(( bank / 1000/2) * cycles);
     for (let c = 0; c < multiplier; c++) {
       let indexClassyParagraph = chooseRandomParagraph();
       let classy = findClass(paragraphs[indexClassyParagraph])
@@ -211,7 +211,7 @@ function chooseRandomParagraph() {
 
   let index = 0
   
-  if(cyclestr>2){
+  if(cyclestr>1){
     index = Math.floor( random(getLastVisibleElement(),paragraphs.length));
   }else{
     index = Math.floor( Math.random() * paragraphs.length);
@@ -274,8 +274,18 @@ function chooseRandomFunction(functions,n) {
 
 
 
-function mouseClicked() {
-}
+// function mouseClicked() {
+//   let n = 0
+//   print("hello")
+//   let paragraphA = paragraphs[n]
+//   let paragraphB = paragraphs[n+1]
+//   let combinedParagraphs = paragraphA + " " + paragraphB
+//   console.log(combinedParagraphs)
+//   combinedParagraphs.style('columns', '100px 3');
+//   paragraphs[n] = combinedParagraphs
+//   array.splice(paragraphs[n+1], 1);
+
+// }
 
 
 
@@ -292,13 +302,19 @@ function changeFont(n){
     let diceRollC = random(100)
     let child = children[i]
     let styleChild = children[i].classList[0]
-    let textSize = (parseInt(window.getComputedStyle(child).fontSize))
-    let lineHeighter = (parseInt(window.getComputedStyle(child).lineHeight))
+    let textSize = parseInt(window.getComputedStyle(child).fontSize)
+    let lineHeighter = parseInt(window.getComputedStyle(child).lineHeight)
     lineHeighter += 3
 
     if(diceRoll>80){
       child.style.lineHeight = `${lineHeighter}px`
     }
+
+    if(lineHeighter>160){
+      child.style.lineHeight = "normal"
+    }
+
+
 
     if(diceRollB>90){
       child.style.fontWeight = random(["100","300","500"])
@@ -317,6 +333,7 @@ function changeFont(n){
       child.style.fontFamily = "Roboto Condensed"
     }
 
+    
 
   }
 }
@@ -426,7 +443,7 @@ function increaseParagraphSize(n) {
     let child = children[i]
     let textSize = (parseInt(window.getComputedStyle(child).fontSize))
     textSize += 1
-    if (textSize<50){
+    if (textSize<70){
       child.style.fontSize = `${textSize}px`
     }
 
@@ -588,7 +605,5 @@ document.addEventListener('touchmove', resetTimer);
 //////NOTES TO KEEP:---------------------------------------------------
 
 
-// add timer
 // fix spaces
-// fix the fact that restarting wil restart only when inside the transform
-//add avater icon
+// 
