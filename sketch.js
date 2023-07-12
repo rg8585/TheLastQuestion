@@ -127,7 +127,7 @@ document.addEventListener("wheel", function(event) {
 
 
     //cycle
-    if(( (paragraphs.length) -2 ).elt.getBoundingClientRect().y<-10){
+    if(( paragraphs[(paragraphs.length)-2].elt.getBoundingClientRect().y<-10){
       mainContainer.style('transform',`translateY(${windowHeight*2}px`)
       cycleAnimation = 0
       window.scrollTo(0, 0);
