@@ -120,7 +120,7 @@ document.addEventListener("wheel", function(event) {
   if ( getLastVisibleElement() >= paragraphs.length-2) {
 
     //translating scroll
-    cycleAnimation -= deltaY*2
+    cycleAnimation -= deltaY*5
     quickswitch = false
     mainContainer.style('transform',`translateY(${cycleAnimation}px`)
     console.log("im transforming")
@@ -614,6 +614,7 @@ function timerIncrement() {
   idleTime++;
   console.log(idleTime)
   if (idleTime >= 15) { // 15 minutes (15 * 60 seconds)
+    window.scrollTo(0, 0);
     window.location.reload(); // Restart the page
   }
 }
